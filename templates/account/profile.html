@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+{% load crispy_forms_tags %}
+
+    Профиль
+{% endblock %}
+{% block content %}
+<h1 style="padding-left: 100px">Мой профиль:</h1>
+<div class="profile" style="margin: 30px">
+        <p style="font-family: sans-serif; font-size: 20px;">Имя: {{user.first_name}}</p>
+        <p style="font-family: sans-serif; font-size: 20px;">Фамилия: {{user.last_name}}</p>
+        <p style="font-family: sans-serif; font-size: 20px;"> Телефон: {% if user.phone %} {{user.phone}} {% else %} не указан {% endif %}</p>
+    <br>
+        <p style="font-family: sans-serif; font-size: 25px; padding-left: 60px; margin: 30px">Мой адрес: </p>
+
+            <span style="padding: 5px; font-size: 20px;">{% if user.postal_code %} почтовый индекс: {{user.postal_code}}; {% endif %}</span>
+            <span style="padding: 5px; font-size: 20px;">{% if user.city %} город: {{user.city}}; {% endif %}</span>
+            <span style="padding: 5px; font-size: 20px;">{% if user.street %} улица: {{user.street}}; {% endif %}</span>
+            <span style="padding: 5px; font-size: 20px;">{% if user.house %} дом: {{user.house}}; {% endif %}</span>
+            <span style="padding: 5px; font-size: 20px;">{% if user.building %} корпус: {{user.building}}; {% endif %}</span>
+            <span style="padding: 5px; font-size: 20px;">{% if user.apartment %} квартира: {{user.apartment}}; {% endif %}</span>
+
+</div>
+{% endblock %}

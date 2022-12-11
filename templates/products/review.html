@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}Отзывы о товаре{% endblock title %}
+
+{% block content %}
+
+    <h1>Отзывы:</h1>
+<div  class="container">
+    {% if object.rating %}
+        <div class="container" style=" border: 1px solid grey; background: #2c2c2c; width: 60%">
+            {% for rating in object.product_rating.all %}
+                 <div style="padding: 10px; margin: 10px;">
+                      <div class="rating">
+                         <div class="rating__body">
+                              <div class="rating__active"></div>
+                         </div>
+                         <div class="rating__value">{{ rating.rating }}</div>
+                      </div>
+                      <p style="font-size: 18px;color: goldenrod"> {{ rating.user.first_name }}:</p>
+                      <p style="color: #fff9dc"> {{ rating.review }} </p>
+                      <p style="color:grey; font-size: 12px"> {{ rating.created }} </p>
+                 </div>
+            {% endfor %}
+        </div>
+        {% if request.user not in users %}
+            <p style="margin-top: 30px; text-align: center" ><a href="{{product.get_absolute_url }}add_review/"><button class="btn btn-success">Оставить отзыв</button></a></p>
+        {% endif %}
+
+     {% else %}
+            <p style="color: silver; font-size: 20px"><b>Нет отзывов</b></p>
+            <p style="color: silver; font-size: 18px; margin-bottom: 50px">Будьте первыми. Оставьте свой отзыв</p>
+            <a class="btn btn-success" style="color: white" href="{{product.get_absolute_url }}add_review/">Оставить отзыв</a>
+    {% endif %}
+</div>
+
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+    Управление скидками
+{% endblock %}
+
+{% block content %}
+<h2 style="padding-left: 100px">Управление скидками:</h2>
+
+<div class="container-lg text-center">
+  <div class="row">
+    <div class="col-7">
+        <div class="search-filter">
+            <form action="" method="post">
+                {% csrf_token %}
+                <table class="cart-table">
+                    {{form.as_table}}
+                </table>
+                <button  class="btn btn-success">Выбрать</button>
+            </form>
+        </div>
+    </div>
+    <div class="col">
+        <div class="search-filter">
+            <form action="" method="post">
+                {% csrf_token %}
+                <table class="cart-table">
+                    {{form_delete.as_table}}
+                </table>
+                <button  class="btn btn-success">Убрать</button>
+            </form>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+
+{#<div class="container-fluid text-center">#}
+{#    <div class="search-filter" style="width: 50%">#}
+{#        <form action="" method="post">#}
+{#            {% csrf_token %}#}
+{#            <table class="cart-table">#}
+{#                {{form.as_table}}#}
+{#            </table>#}
+{#            <button  class="btn btn-success">Выбрать</button>#}
+{#        </form>#}
+{#    </div>#}
+{##}
+{#    <div class="search-filter" style="width: 30%">#}
+{#        <form action="" method="post">#}
+{#            {% csrf_token %}#}
+{#            <table class="cart-table">#}
+{#                {{form_delete.as_table}}#}
+{#            </table>#}
+{#            <button  class="btn btn-success">Убрать</button>#}
+{#        </form>#}
+{#    </div>#}
+{#</div>#}
+
+{% endblock %}

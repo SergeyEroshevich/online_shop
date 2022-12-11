@@ -1,0 +1,98 @@
+{% extends '_base.html' %}
+{% load mathfilters %}
+{% load floattags %}
+{% load products_extras %}
+{% load mathfilters %}
+{% load static %}
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid text-center" style="margin-top: 30px">
+  <div class="row">
+    <div class="col-4">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+
+  <div class="carousel-inner">
+      {% for i in object.product_image.all %}
+        <div class="carousel-item active">
+          <img src="{{i.img.url}}" class="d-block w-8" style="max-height: 600px " alt="...">
+        </div>
+      {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+    </div>
+    <div class="col-7" style="color: white;">
+             <h2 style="color: goldenrod">{{ product.name }}</h2><br>
+             <div class="product-text" >
+                <p>Описание: {{ product.full_description }}</p>
+                <p>Цена: {{ product.price|mul:product.sale|floatformat:2 }} руб.</p><br>
+                {% if product.stock > 0 %}
+                    <p>Осталось: {{ product.stock }} шт.</p><br>
+                {% else %}
+                    <p style="color: red">Нет в наличии</p><br>
+                {% endif %}
+                <a href="{{ product.get_absolute_url }}/review/" style="text-decoration: none;">
+                <div class="form__item" style="padding-left: 480px">
+                     <div class="rating">
+                         <div class="rating__body">
+                              <div class="rating__active"></div>
+                         </div>
+                         <div class="rating__value">{{ product.rating|formatted_float }}</div>
+                     </div>
+                </div>
+                </a>
+                        {% if product.rating > 0 %}
+                            <p style="font-size: 18px; padding:10px 0 0 10px"><a style="color: deepskyblue;" href="{{ product.get_absolute_url }}/review/">
+                                {{ product.product_rating.count }} {{ product.product_rating.count|ru_plural:"отзыв,отзыва,отзывов" }}</a></p>
+                        {% else %}
+                            <p style="color: grey; font-size: 18px;">Нет отзывов</p>
+                        {% endif %}
+
+            </div>
+
+            <div style="margin-top: 20px">
+               {% if product.stock %}
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <span style="margin-left: 110px" >Количество:</span>
+                        <input type="number" value="1" name="quantity" max={{product.stock}} min="1">
+                        <input type="text" value="True" name="update" hidden>
+                        <button  type="submit" class="button" style="padding: 10px; margin-left: 20px; font-size: 18px;">Добавить в корзину</button>
+                        <p style="color: grey; text-align:center; font-size: 14px">(укажите не более {{product.stock}})</p>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{#    <div class="products-img">#}
+{#    {% for i in object.product_image.all %}#}
+{#        <div class="product-img" style="float: left">#}
+{#            <img  class="prod_img" style="width: 30%" src="{{i.img.url}}" alt="нет картинки">#}
+{#        </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+
+
+
+
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock %}

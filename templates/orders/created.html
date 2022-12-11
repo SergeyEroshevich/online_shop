@@ -1,0 +1,9 @@
+{% extends "_base.html" %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+    <h1>Спасибо!</h1>
+    <p>Ваш заказ успешно оформлен. Номер вашего заказа: <strong>{{ order.id }}</strong>.</p>
+    <p>Сумма вашего заказа: <strong>{{ order.get_total_cost }}</strong>.</p>
+{% endblock %}

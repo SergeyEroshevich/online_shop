@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Store{% endblock title %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+<header>
+
+            <!-- Панель навигации -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'product_list' %}">Каталог товаров</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Оплата и доставка</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Скидки</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Контакты</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+    {#    панель навигации#}
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-fluid">
+         <a class="navbar-brand" href="/">
+           <img src="{% static 'images/logo2.jpg' %}" alt="Bootstrap" width="90" height="90"  style="border-radius: 50%">
+            WebSiteName
+        </a>
+
+{#      социальные сети#}
+      <div class="btn-group">
+          <a href="#" class="btn btn" aria-current="page"><img src="{% static 'images/inst.png' %}" alt="" style="width: 30px"></a>
+          <a href="#" class="btn btn"><img src="{% static 'images/face.png' %}" alt="" style="width: 30px"></a>
+          <a href="#" class="btn btn"><img src="{% static 'images/vk.png' %}" alt="" style="width: 30px"></a>
+          <p style="color: goldenrod; padding-top: 10px">+37529 106 84 00</p>
+      </div>
+
+{#      форма поиска#}
+        <form class="form-inline mt-2 mt-md-0" action="{% url 'search_results' %}"  method="get" role="search" >
+          <input name="q" class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">
+          <button class="btn btn-success" type="submit">Поиск</button>
+        </form>
+
+{#      корзина#}
+{% with total_items=cart|length %}
+    <a href="{% url 'cart:cart_detail' %}">
+      <button type="button" class="btn btn-warning position-relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30"  height="30" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                   <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+              </svg>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                   {% if cart|length > 0 %}
+                        {{ total_items }}
+                   {% else %}
+                        0
+                   {% endif %}
+              </span>
+        </button>
+   </a>
+{% endwith %}
+
+    {#  профиль#}
+      <div>
+          {% if user.is_authenticated %}
+            <p style="font-size: 13px; color: white;">{{user.first_name}}, вы вошли в аккаунт</p>
+          {% endif %}
+          <div class="btn-group">
+                {% if user.is_authenticated %}
+                      <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                          </svg>
+                      </button>
+                      <ul class="dropdown-menu">
+                         {% if user.is_staff %}
+                            <li><a  style="color: red" class="dropdown-item" href="{% url 'order_list' %}">Все заказы</a></li>
+                            <li><a  style="color: red" class="dropdown-item" href="{% url 'discount_management' %}">Управление скидками</a></li>
+                         {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'my_orders' %}">Мои заказы</a></li>
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Мои данные</a></li>
+                        <li><a class="dropdown-item" href="{% url 'change_profile' %}">Изменить данные</a></li>
+                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Изменить пароль</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'account_logout' %}">Выйти</a></li>
+                      </ul>
+                {% else %}
+                     <p>
+                        <a class="btn btn-success" style="color: white"  href="{% url 'account_login' %}">Вход</a>
+                        <a class="btn btn-primary" style="color: white" href="{% url 'account_signup' %}">Регистрация</a>
+                     </p>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+</header>
+
+    <div class="container-fluid" style="background: darkslategray; color: wheat; min-height: 750px" >
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+    <footer>
+        <nav class="navbar sticky-bottom bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Sticky bottom</a>
+          </div>
+        </nav>
+    </footer>
+</body>
+</html>

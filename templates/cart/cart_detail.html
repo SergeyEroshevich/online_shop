@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}
+    Корзина заказов
+{% endblock %}
+{% block content %}
+<div class="cart-detail">
+    <h1 style="text-align: center; color: goldenrod">Корзина</h1>
+    {% if cart|length > 0 %}
+    <table class="cart-table">
+        <thead>
+        <tr>
+            <th>Изображение</th>
+            <th>Название</th>
+            <th>Количество</th>
+            <th>Удалить</th>
+            <th>Цена за ед.</th>
+            <th>Стоимость</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in cart %}
+            {% with product=item.product %}
+                <tr>
+                    <td>
+                        <a href="{{ product.get_absolute_url }}">
+                            <img src="{{ product.product_image.first.img.url }}" class="img-thumbnail" style="height: 150px"  alt="...">
+{#                            <img class="cart-img" style="height: 150px" src="{{ product.product_image.first.img.url }}">#}
+                        </a>
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        <a href="{% url 'cart:cart_remove' product.id%}">
+                            <svg xmlns="http://www.w3.org/2000/svg" color="white" width="25" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </a>
+                    </td>
+                    <td class="num">{{ item.price }}</td>
+                    <td class="num">{{ item.total_price }}</td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+        <tr class="total">
+            <td>Итого</td>
+            <td colspan="4"></td>
+            <td class="num">{{ cart.get_total_price }} руб.</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="text-align: center">
+        <a href="{% url 'product_list' %}"><button class="button">Продолжить покупки</button></a>
+        <a href="{% url 'order_create' %}"><button class="button">Оформить заказ</button></a>
+    </p>
+    {% else %}
+    <div style="text-align: center">
+        <h3 style="color: grey">Корзина пуста</h3>
+        <img src="{% static 'images/cart_empty.png' %}" alt="нет картинки">
+        <a href="{% url 'product_list' %}"><button class="button">Вернуться к товарам</button></a>
+    </div><br><br>
+    {% endif %}
+</div>
+{% endblock %}

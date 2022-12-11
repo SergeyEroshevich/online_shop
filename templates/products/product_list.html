@@ -1,0 +1,137 @@
+{% extends '_base.html' %}
+{% load floattags %}
+{% load products_extras %}
+{% load static %}
+{% block title %}Товары{% endblock title %}
+
+{% block content %}
+
+{#    навигация по категориям#}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-gold" style="background: goldenrod;">
+  <div class="container-fluid" style="padding-left: 450px;">
+    {% if not category %}{% endif %}
+    <a class="navbar-brand" href="{% url 'product_list' %}">Все категории</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+           {% for c in categories %}
+              {% if category.slug == c.slug %}{% endif %}
+              <a class="nav-link" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+           {% endfor %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+{#    каталог товаров#}
+<div class="container-fluid text-center">
+  <div class="row">
+    <div class="col-md-auto" style="background: #353535; border: 2px solid grey; height: 550px">
+
+        {#    форма для поиска#}
+        <div class="search-filter">
+            <h1 style="font-size: 23px; color: goldenrod">Поиск по параметрам:</h1>
+            <form action="" style="">
+                <table class="form-filter">{{ filter.form }}</table>
+                <button class="btn btn-success">Найти</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-9" style="background: #353535; border: 2px solid grey; margin: 0 0 30px 30px">
+
+        {#    карточка товара#}
+        {% for product in product_list %}
+            <div class="card" style="width: 20%; background: #555555; border: 3px solid black; height: 500px; float: left; box-sizing: border-box; margin: 20px">
+                    {% if product.discount %}
+                        <span class="discaunt_text">{{product.value_sale}}%</span>
+                    {% endif %}
+                <a href="{{ product.get_absolute_url }}">
+                    <div class="card-img-top"  style="height: 250px; background: white; border-radius: 1%">
+                        <img src="{{product.product_image.first.img.url}}" class="" style="max-height: 249px; max-width: 249px" alt="...">
+                    </div>
+                </a>
+              <div class="card-body">
+                <a href="{{ product.get_absolute_url }}">
+                  <p class="card-title" style="color: orange; font-size: 16px;">{{ product.name }}</p>
+                </a>
+                    {% if product.discount %}
+                        <span style="font-size: 16px"><s>{{ product.price }}</s></span>
+                        <span style="color: coral; padding-left: 10px; font-size: 16px">{{ product.sale_price|floatformat:2 }} руб. </span>
+
+                    {% else %}
+                    <p style="font-size: 16px">{{ product.price }} руб. </p>
+                    {% endif %}
+                <p class="card-text">{{ product.description }}</p>
+                   <a href="{{ product.get_absolute_url }}/review/" style="text-decoration: none">
+                        <div style="margin-top: 20px;">
+                             <div class="rating" style="padding-left:50px;">
+                                 <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                 </div>
+                                <div class="rating__value">{{ product.rating|formatted_float }}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {% if product.rating > 0 %}
+                        <p style="padding: 20px">
+                            <a style="color: deepskyblue; font-size: 18px;"
+                                href="{{ product.get_absolute_url }}/review/">
+                                {{ product.product_rating.count }}  {{ product.product_rating.count|ru_plural:"отзыв,отзыва,отзывов" }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <p style="color: grey; font-size: 18px; padding: 18px">Нет отзывов</p>
+                    {% endif %}
+              </div>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{#    пагинация#}
+    <nav aria-label="...">
+       {% if paginator.num_pages > 1 %}
+        <ul class="pagination justify-content-center">
+            {% if paginator.num_pages > 1 %}
+                {% if page_obj.has_previous %}
+                    {% if 'ordering' and 'price__gt' and 'price__lt' in request.get_full_path %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ request.get_full_path }}&page={{ page_obj.previous_page_number }}"> Предыдущая </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"> Предыдущая </a></li>
+                    {% endif %}
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    {% if 'ordering' and 'price__gt' and 'price__lt' in request.get_full_path %}
+                        <li class="page-item" ><a class="page-link" href="{{ request.get_full_path }}&page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    {% if 'name' and 'ordering' and 'price__gt' and 'price__lt' in request.get_full_path %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page={{ page_obj.next_page_number }}"> Следующая </a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"> Следующая </a></li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+                <li class="page-item" >
+                    <span style="background: transparent; color: white; margin-left: 5px" class="page-link">{{ page_obj.number }}</span>
+                </li>
+        </ul>
+       {% endif %}
+    </nav>
+
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock content %}

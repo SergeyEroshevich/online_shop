@@ -1,0 +1,95 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+    Заказы
+{% endblock %}
+{% block content %}
+<h1 style="padding-left: 100px; text-align: center">Заказы:</h1>
+
+<div class="container-fluid text-center">
+  <div class="row">
+    <div class="col-md-auto" style="background: #353535; border: 2px solid grey; height: 450px">
+         <div class="search-filter">
+            <p style="font-size: 25px">Поиск по параметрам:</p>
+
+            <form  method="get">
+                <table class="form-filter">
+                    {{ filter.form }}
+                </table>
+                <button class="btn btn-success">Найти</button>
+            </form>
+
+         </div>
+    </div>
+
+    <div class="col-9">
+        <div class="">
+            <table class="cart-table" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Дата заказа</th>
+                        <th>Номер заказа</th>
+                        <th>Статус</th>
+                        <th>Оплата</th>
+                        <th>Доставка</th>
+                        <th>Стоимость</th>
+                        <th>Детали</th>
+                    </tr>
+                </thead>
+               {% for order in orders %}
+                    <tr>
+                        <td> {{order.created}} </td>
+                        <td> {{order.id}} </td>
+                        <td> {{ order.status }}  </td>
+                        <td> {{ order.payment }}  </td>
+                        <td> {{ order.delivery }}  </td>
+                        <td> {{order.get_total_cost}} руб. </td>
+                        <td><a style="color: deepskyblue" href="{{ order.get_absolute_url }}">Подробности заказа</a> </td>
+                    </tr>
+                {% endfor  %}
+           </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+{#    пагинация#}
+    <nav>
+         {% if paginator.num_pages > 1 %}
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    {% if 'ordering' in request.get_full_path %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page=1"> << </a></li>
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page={{ page_obj.previous_page_number }}"> < </a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page=1"> << </a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"> < </a></li>
+                    {% endif %}
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    {% if 'ordering'  in request.get_full_path %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    {% if 'ordering' in request.get_full_path %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page={{ page_obj.next_page_number }}"> > </a></li>
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}&page={{ page_obj.paginator.num_pages }}"> >> </a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"> > </a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"> >> </a></li>
+                    {% endif %}
+                {% endif %}
+
+{#                <span class="current">#}
+{#                    Страница {{ page_obj.number }} из {{ paginator.num_pages }}#}
+{#                </span>#}
+            </ul>
+         {% endif %}
+    </nav>
+
+{% endblock %}
